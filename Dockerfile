@@ -8,7 +8,7 @@ RUN apt upgrade -y
 
 RUN apt install -y git curl sudo
 
-RUN apt install -y cmake gcc-arm-none-eabi ninja-build clang clangd clang-tidy
+RUN apt install -y cmake gcc-arm-none-eabi ninja-build clang clangd clang-tidy gcc g++
 
 RUN git clone https://github.com/ithewei/libhv.git && cd libhv && ./configure && make && sudo make install
 
