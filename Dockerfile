@@ -6,6 +6,8 @@ LABEL description="This is a Docker Image for XRobot build."
 RUN apt update
 RUN apt upgrade -y
 
+RUN apt install -y git curl sudo
+
 RUN apt install -y cmake gcc-arm-none-eabi ninja-build clang clangd clang-tidy
 
 RUN git clone https://github.com/ithewei/libhv.git && cd libhv && ./configure && make && sudo make install
