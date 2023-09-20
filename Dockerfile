@@ -8,7 +8,7 @@ RUN apt upgrade -y
 
 RUN apt install -y git curl sudo wget
 
-RUN apt install -y cmake gcc-arm-none-eabi ninja-build clang clangd clang-tidy gcc g++ gdb
+RUN apt install -y cmake gcc-arm-none-eabi ninja-build clang clangd clang-tidy gcc g++ gdb python3-tk python3-pip
 
 RUN git clone https://github.com/ithewei/libhv.git && cd libhv && ./configure && make && sudo make install
 
