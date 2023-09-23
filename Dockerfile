@@ -7,7 +7,7 @@ LABEL description="This is a Docker Image for XRobot build."
 
 RUN apt update && apt upgrade -y --no-install-recommends
 
-RUN apt install -y --no-install-recommends git curl sudo wget zip
+RUN apt install -y --no-install-recommends git curl sudo wget zip make
 
 RUN apt install -y --no-install-recommends cmake gcc-arm-none-eabi ninja-build clang clangd clang-tidy gcc g++ gdb python3-tk python3-pip && apt clean
 
