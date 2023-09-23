@@ -1,5 +1,7 @@
 FROM ubuntu:22.04
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 LABEL maintainer="2592509183@qq.com"
 LABEL description="This is a Docker Image for XRobot build."
 
