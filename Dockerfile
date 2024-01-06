@@ -13,6 +13,8 @@ RUN apt install -y --no-install-recommends cmake ninja-build clang clangd clang-
 
 RUN git clone https://github.com/ithewei/libhv.git && cd libhv && ./configure && make && sudo make install && cd .. && rm -rf libhv
 
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
 RUN wget https://github.com/xrobot-org/XRobot/raw/dev/hw/mcu/esp/Shell/install_esp-idf.sh && bash install_esp-idf.sh && \
     wget https://github.com/xrobot-org/XRobot/raw/dev/hw/mcu/esp/Shell/set-idf-path.sh && bash set-idf-path.sh
 
