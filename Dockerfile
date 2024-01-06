@@ -22,5 +22,3 @@ RUN wget https://github.com/cyberbotics/webots/releases/download/R2023a/webots_2
 
 RUN cd ~/esp/esp-idf/components && wget "https://components.espressif.com/api/download/?object_type=component&object_id=3a7a8cea-c960-424e-87aa-ccc4cabfaa1e" -O libhelix-mp3.zip && unzip -o libhelix-mp3.zip -d libhelix-mp3
 RUN cd ~/esp/esp-idf/components && wget "https://components.espressif.com/api/download/?object_type=component&object_id=c7fc5cb0-2480-4262-9221-4513747ebee6" -O mdns.zip && unzip -o mdns.zip -d mdns
-RUN sed -i '220i set_target_properties(${COMPONENT_LIB} PROPERTIES COMPILE_FLAGS -w)' ~/esp/esp-idf/components/arduino-esp32/CMakeLists.txt
-
