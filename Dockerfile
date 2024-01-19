@@ -17,3 +17,6 @@ RUN wget https://github.com/xrobot-org/XRobot/raw/master/hw/mcu/esp/Shell/instal
 wget https://github.com/xrobot-org/XRobot/raw/master/hw/mcu/esp/Shell/set-idf-path.sh && bash set-idf-path.sh
 
 RUN wget https://github.com/cyberbotics/webots/releases/download/R2023a/webots_2023a_amd64.deb -O ./webots.deb && apt install ./webots.deb -y --no-install-recommends && rm webots.deb
+
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
