@@ -145,7 +145,7 @@ jobs:
       run:  docker pull ghcr.io/xrobot-org/${{ matrix.image_name }}:main
 
     - name: Rename docker image
-      run:  docker tag ghcr.io/xrobot-org/${{ matrix.image_name }}:main docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.monitor_name }}:latest
+      run:  docker tag ghcr.io/xrobot-org/${{ matrix.image_name }}:main docker.io/xrimage/${{ matrix.monitor_name }}:latest
 
     - name: upload file
-      run: docker push docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.monitor_name }}:latest
+      run: docker push docker.io/xrimage/${{ matrix.monitor_name }}:latest
