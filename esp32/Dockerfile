@@ -11,4 +11,4 @@ RUN apt upgrade -y --no-install-recommends & apt install -y --no-install-recomme
 
 RUN wget https://github.com/xrobot-org/XRobot/raw/dev/hw/mcu/esp/Shell/install_esp-idf.sh && bash install_esp-idf.sh && wget https://github.com/xrobot-org/XRobot/raw/dev/hw/mcu/esp/Shell/set-idf-path.sh && bash set-idf-path.sh
 
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/python3 /usr/bin/python && pip install --upgrade pip

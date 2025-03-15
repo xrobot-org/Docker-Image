@@ -11,4 +11,4 @@ RUN apt upgrade -y --no-install-recommends & apt install -y --no-install-recomme
 
 RUN git clone https://github.com/ithewei/libhv && cd libhv && ./configure && make && sudo make install && cd .. && rm -rf libhv
 
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/python3 /usr/bin/python && pip install --upgrade pip
