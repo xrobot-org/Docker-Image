@@ -7,7 +7,7 @@ LABEL description="This is a Docker Image for XRobot build."
 
 RUN apt update
 
-RUN apt upgrade -y --no-install-recommends & apt install -y --no-install-recommends git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build clang-18 clangd clang-tidy gcc g++ python3-tk python3-pip && apt clean
+RUN apt upgrade -y --no-install-recommends & apt install -y --no-install-recommends git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build clang-18 clangd clang-tidy gcc g++ python3-tk && apt clean
 
 RUN ln -s /usr/bin/clang++-18 /usr/bin/clang++ && ln -s /usr/bin/clang-18 /usr/bin/clang
 
