@@ -7,7 +7,8 @@ LABEL description="This is a Docker Image for XRobot build."
 
 RUN apt update
 
-RUN apt upgrade -y --no-install-recommends & apt install -y --no-install-recommends xz-utils git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build file clang-18 clangd clang-tidy gcc g++ python3-tk && apt clean
+RUN apt upgrade -y --no-install-recommends &&
+    apt install -y --no-install-recommends xz-utils git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build file clang-18 clangd clang-tidy gcc g++ python3-tk python3.12-venv && apt clean
 
 RUN ln -s /usr/bin/clang++-18 /usr/bin/clang++ && ln -s /usr/bin/clang-18 /usr/bin/clang
 
@@ -21,4 +22,12 @@ RUN wget https://github.com/cyberbotics/webots/releases/download/R2023a/webots_2
 
 RUN ln -s /usr/bin/python3 /usr/bin/python && curl -sS https://bootstrap.pypa.io/get-pip.py | python3
 
-RUN wget https://github.com/xrobot-org/XRobot/raw/dev/hw/mcu/esp/Shell/install_esp-idf.sh && bash install_esp-idf.sh && wget https://github.com/xrobot-org/XRobot/raw/dev/hw/mcu/esp/Shell/set-idf-path.sh && bash set-idf-path.sh
+RUN rm -rf ~/esp &&
+    mkdir ~/esp &&
+    cd ~/esp &&
+    git clone --depth 1 --branch v5.4.1 https://github.com/espressif/esp-idf.git &&
+    cd ./esp-idf &&
+    git submodule update --init --recursive --recommend-shallow --depth 1 &&
+    bash ./install.sh &&
+    rm -rf .git &&
+    chmod +x ./*sh
