@@ -31,6 +31,8 @@ jobs:
             context: ./stm32
           - image_name: docker-image-esp32
             context: ./esp32
+          - image_name: docker-image-ch32-riscv
+            context: ./ch32-riscv
           - image_name: docker-image-linux
             context: ./linux
           - image_name: docker-image-webots
@@ -124,6 +126,8 @@ jobs:
             monitor_name: xrimage-stm32
           - image_name: docker-image-esp32
             monitor_name: xrimage-esp32
+          - image_name: docker-image-ch32-riscv
+            monitor_name: xrimage-ch32-riscv
           - image_name: docker-image-linux
             monitor_name: xrimage-linux
           - image_name: docker-image-webots
