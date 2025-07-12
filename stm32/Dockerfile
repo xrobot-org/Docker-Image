@@ -7,9 +7,22 @@ LABEL description="This is a Docker Image for XRobot build."
 
 RUN apt update
 
-RUN apt upgrade -y --no-install-recommends & apt install -y --no-install-recommends xz-utils git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build file clang-18 clangd clang-tidy gcc g++ python3-tk && apt clean
+RUN apt upgrade -y --no-install-recommends && apt install -y --no-install-recommends xz-utils git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build file clang-tidy gcc g++ python3-tk && apt clean
 
-RUN ln -s /usr/bin/clang++-18 /usr/bin/clang++ && ln -s /usr/bin/clang-18 /usr/bin/clang
+RUN wget https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/releases/download/release-19.1.5/LLVM-ET-Arm-19.1.5-Linux-x86_64.tar.xz && tar -xvf LLVM-ET-Arm-19.1.5-Linux-x86_64.tar.xz && rm LLVM-ET-Arm-19.1.5-Linux-x86_64.tar.xz && mv LLVM-ET-Arm-19.1.5-Linux-x86_64 /opt && sudo ln -s /opt/LLVM-ET-Arm-19.1.5-Linux-x86_64/bin/* /usr/bin
+
+RUN for pair in \
+      "clang:clang" \
+      "clang++:clang++" \
+      "llvm-objcopy:objcopy" \
+      "llvm-size:size" \
+      "llvm-ar:ar" \
+      "llvm-nm:nm" \
+      "llvm-strip:strip"; do \
+    src=$(echo $pair | cut -d: -f1); \
+    tgt=$(echo $pair | cut -d: -f2); \
+    ln -sf /opt/LLVM-ET-Arm-19.1.5-Linux-x86_64/bin/$src /usr/bin/starm-$tgt; \
+  done
 
 RUN sudo mv /usr/lib/python3.12/EXTERNALLY-MANAGED /usr/lib/python3.12/EXTERNALLY-MANAGED.bk
 
