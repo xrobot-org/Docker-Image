@@ -27,7 +27,7 @@ RUN mv /usr/lib/python3.12/EXTERNALLY-MANAGED /usr/lib/python3.12/EXTERNALLY-MAN
 
 RUN set -eux; \
     apt-get update; \
-    wget -O /tmp/webots.deb https://github.com/cyberbotics/webots/releases/download/R2023a/webots_2023a_amd64.deb; \
+    wget -O /tmp/webots.deb https://github.com/cyberbotics/webots/releases/download/R2025a/webots_2025a_amd64.deb; \
     apt-get install -y --no-install-recommends /tmp/webots.deb; \
     rm -f /tmp/webots.deb; \
     rm -rf /var/lib/apt/lists/*
