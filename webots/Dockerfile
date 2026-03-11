@@ -14,7 +14,7 @@ RUN apt-get update && \
       clang-18 clangd clang-tidy \
       gcc g++ \
       python3 python3-venv python3-tk \
-      libwpa-client-dev libnm-dev libudev-dev \
+      libwpa-client-dev libnm-dev libudev-dev libgpiod-dev \
       ca-certificates pkg-config && \
     rm -rf /var/lib/apt/lists/*
 

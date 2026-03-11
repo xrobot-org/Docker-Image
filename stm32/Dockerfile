@@ -12,7 +12,7 @@ RUN apt upgrade -y --no-install-recommends && apt install -y --no-install-recomm
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         xz-utils git curl sudo wget zip unzip make \
-        net-tools usbutils util-linux expect expect-dev nano gdb cmake ninja-build file clang-tidy gcc g++ python3-tk && \
+        net-tools usbutils util-linux expect expect-dev nano gdb cmake ninja-build file clang-tidy gcc g++ python3-tk libgpiod-dev && \
     apt-get clean
 
 RUN curl -L -o stm32cube-ide-core.vsix \

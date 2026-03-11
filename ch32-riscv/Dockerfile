@@ -6,7 +6,7 @@ LABEL maintainer="2592509183@qq.com"
 LABEL description="This is a Docker Image for XRobot build."
 
 RUN apt update && apt upgrade -y --no-install-recommends && \
-apt install -y --no-install-recommends xz-utils git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build file clang-18 clangd clang-tidy gcc g++ python3-tk && apt clean
+apt install -y --no-install-recommends xz-utils git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build file clang-18 clangd clang-tidy gcc g++ python3-tk libgpiod-dev && apt clean
 
 RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100 && \
     update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100

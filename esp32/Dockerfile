@@ -8,7 +8,7 @@ LABEL description="This is a Docker Image for XRobot build."
 RUN apt update
 
 RUN apt upgrade -y --no-install-recommends && \
-    apt install -y --no-install-recommends xz-utils git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build file clang-18 clangd clang-tidy gcc g++ python3-tk python3.12-venv && apt clean
+    apt install -y --no-install-recommends xz-utils git curl sudo wget zip make && apt install -y net-tools usbutils nano gdb cmake ninja-build file clang-18 clangd clang-tidy gcc g++ python3-tk python3.12-venv libgpiod-dev && apt clean
 
 RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100 && \
     update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
@@ -26,4 +26,3 @@ RUN rm -rf ~/esp && \
     bash ./install.sh && \
     rm -rf .git && \
     chmod +x ./*sh
-
