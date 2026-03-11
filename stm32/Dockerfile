@@ -34,16 +34,23 @@ expect {
 }
 EOF
 
-RUN script -q -c "expect download.exp" /dev/null && \
-    rm download.exp && \
-    BUNDLE_FILE=$(ls -t *.bundle | head -n1) && \
-    mkdir -p /opt/st-arm-clang && \
-    unzip "$BUNDLE_FILE" -d /opt/st-arm-clang && \
+RUN if [ -x extension/resources/binaries/linux/x86_64/cube ]; then \
+      script -q -c "expect download.exp" /dev/null && \
+      rm download.exp && \
+      BUNDLE_FILE=$(ls -t *.bundle | head -n1) && \
+      mkdir -p /opt/st-arm-clang && \
+      unzip "$BUNDLE_FILE" -d /opt/st-arm-clang; \
+    else \
+      echo "Linux STM32Cube downloader not found in stm32cube-ide-core.vsix; skipping st-arm-clang bundle install."; \
+      rm download.exp; \
+    fi && \
     rm -rf extension *.bundle *.vsix stm32cube-ide-core.vsix.gz
 
-RUN for exe in /opt/st-arm-clang/bin/*; do \
-      ln -sf "$exe" /usr/bin/$(basename "$exe"); \
-    done
+RUN if [ -d /opt/st-arm-clang/bin ]; then \
+      for exe in /opt/st-arm-clang/bin/*; do \
+        ln -sf "$exe" /usr/bin/$(basename "$exe"); \
+      done; \
+    fi
 
 
 RUN sudo mv /usr/lib/python3.12/EXTERNALLY-MANAGED /usr/lib/python3.12/EXTERNALLY-MANAGED.bk
