@@ -14,7 +14,7 @@ RUN apt-get update && \
       clang-18 clangd clang-tidy \
       gcc g++ \
       python3 python3-venv python3-tk \
-      libwpa-client-dev libnm-dev libudev-dev libgpiod-dev \
+      libwpa-client-dev libnm-dev libudev-dev \
       ca-certificates pkg-config && \
     rm -rf /var/lib/apt/lists/*
 
@@ -31,6 +31,18 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends /tmp/webots.deb; \
     rm -f /tmp/webots.deb; \
     rm -rf /var/lib/apt/lists/*
+
+RUN set -eux; \
+    wget -O /tmp/openvino.tgz https://storage.openvinotoolkit.org/repositories/openvino/packages/2025.4/linux/openvino_toolkit_ubuntu24_2025.4.0.20398.8fdad55727d_x86_64.tgz; \
+    tar -xf /tmp/openvino.tgz -C /tmp; \
+    mkdir -p /opt/intel; \
+    mv /tmp/openvino_toolkit_ubuntu24_2025.4.0.20398.8fdad55727d_x86_64 /opt/intel/openvino_2025.4.0; \
+    ln -sfn /opt/intel/openvino_2025.4.0 /opt/intel/openvino_2025; \
+    rm -f /tmp/openvino.tgz
+
+ENV OpenVINO_DIR=/opt/intel/openvino_2025.4.0/runtime/cmake
+ENV CMAKE_PREFIX_PATH=/opt/intel/openvino_2025.4.0/runtime/cmake:${CMAKE_PREFIX_PATH}
+ENV LD_LIBRARY_PATH=/opt/intel/openvino_2025.4.0/runtime/lib/intel64:/usr/local/webots/lib/controller:${LD_LIBRARY_PATH}
 
 RUN set -eux; \
     apt-get update; \
