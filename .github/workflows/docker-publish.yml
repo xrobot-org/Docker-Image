@@ -27,6 +27,8 @@ jobs:
         include:
           - image_name: docker-image-stm32
             context: ./stm32
+          - image_name: docker-image-mspm0
+            context: ./stm32
           - image_name: docker-image-esp32
             context: ./esp32
           - image_name: docker-image-ch32-riscv
@@ -122,6 +124,8 @@ jobs:
         include:
           - image_name: docker-image-stm32
             monitor_name: xrimage-stm32
+          - image_name: docker-image-mspm0
+            monitor_name: xrimage-mspm0
           - image_name: docker-image-esp32
             monitor_name: xrimage-esp32
           - image_name: docker-image-ch32-riscv
