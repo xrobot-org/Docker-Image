@@ -1,9 +1,10 @@
 FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG OPENCV_VERSION=4.13.0
 
 LABEL maintainer="2592509183@qq.com" \
-      description="Docker Image for XRobot build with Webots and OpenCV 4.10.0"
+      description="Docker Image for XRobot build with Webots and OpenCV 4.13.0"
 
 RUN apt-get update && \
     apt-get upgrade -y --no-install-recommends && \
@@ -55,18 +56,28 @@ RUN set -eux; \
       libeigen3-dev && \
     rm -rf /var/lib/apt/lists/* && \
     cd /tmp && \
-    wget -O opencv.zip https://github.com/opencv/opencv/archive/4.10.0.zip && \
+    wget -O opencv.zip "https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip" && \
+    wget -O opencv_contrib.zip "https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip" && \
     unzip -q opencv.zip && \
-    mkdir -p opencv-4.10.0/build && \
-    cd opencv-4.10.0/build && \
-    cmake .. \
+    unzip -q opencv_contrib.zip && \
+    cmake -S "opencv-${OPENCV_VERSION}" -B "opencv-${OPENCV_VERSION}/build" -G Ninja \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_C_COMPILER=clang \
       -DCMAKE_CXX_COMPILER=clang++ \
       -DCMAKE_CXX_STANDARD=14 \
+      -DOPENCV_EXTRA_MODULES_PATH="/tmp/opencv_contrib-${OPENCV_VERSION}/modules" \
+      -DBUILD_LIST=core,imgproc,imgcodecs,videoio,highgui,calib3d,dnn,features2d,flann,objdetect,aruco \
+      -DOPENCV_GENERATE_PKGCONFIG=ON \
       -DBUILD_TESTS=OFF \
-      -DBUILD_PERF_TESTS=OFF && \
-    make -j"$(nproc)" && \
-    make install && \
+      -DBUILD_PERF_TESTS=OFF \
+      -DBUILD_EXAMPLES=OFF \
+      -DBUILD_opencv_apps=OFF \
+      -DBUILD_opencv_python3=OFF \
+      -DBUILD_JAVA=OFF && \
+    cmake --build "opencv-${OPENCV_VERSION}/build" -j"$(nproc)" && \
+    cmake --install "opencv-${OPENCV_VERSION}/build" && \
     ldconfig && \
-    cd / && rm -rf /tmp/opencv.zip /tmp/opencv-4.10.0
+    cd / && rm -rf "/tmp/opencv.zip" "/tmp/opencv_contrib.zip" "/tmp/opencv-${OPENCV_VERSION}" "/tmp/opencv_contrib-${OPENCV_VERSION}"
+
+ENV OpenCV_DIR=/usr/local/lib/cmake/opencv4
+ENV CMAKE_PREFIX_PATH=/usr/local/lib/cmake/opencv4:${CMAKE_PREFIX_PATH}
