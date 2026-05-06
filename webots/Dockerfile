@@ -11,7 +11,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       xz-utils git curl sudo wget zip unzip make file nano gdb \
       net-tools usbutils \
-      cmake ninja-build \
+      cmake ninja-build libcap2-bin \
       clang-18 clangd clang-tidy \
       gcc g++ \
       python3 python3-venv python3-tk \
