@@ -83,6 +83,10 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ghcr.io/xrobot-org/${{ matrix.image_name }}
+          tags: |
+            type=raw,value=main,enable=${{ github.ref == 'refs/heads/main' }}
+            type=semver,pattern={{version}}
+            type=ref,event=pr
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -115,9 +119,7 @@ jobs:
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
   Publish:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     needs: build
     strategy:
@@ -143,18 +145,41 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Log into registry
-      if: github.event_name != 'pull_request'
+    - name: Log into Docker Hub
       uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Get docker image
-      run:  docker pull ghcr.io/xrobot-org/${{ matrix.image_name }}:main
+    - name: Resolve image tags
+      id: tags
+      shell: sh
+      run: |
+        if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+          version="${GITHUB_REF_NAME#v}"
+          echo "source=${version}" >> "${GITHUB_OUTPUT}"
+          echo "target=${version}" >> "${GITHUB_OUTPUT}"
+        else
+          echo "source=main" >> "${GITHUB_OUTPUT}"
+          echo "target=latest" >> "${GITHUB_OUTPUT}"
+        fi
 
-    - name: Rename docker image
-      run:  docker tag ghcr.io/xrobot-org/${{ matrix.image_name }}:main docker.io/xrimage/${{ matrix.monitor_name }}:latest
+    - name: Pull image from GHCR
+      run: docker pull ghcr.io/xrobot-org/${{ matrix.image_name }}:${{ steps.tags.outputs.source }}
 
-    - name: upload file
-      run: docker push docker.io/xrimage/${{ matrix.monitor_name }}:latest
+    - name: Publish image to Docker Hub
+      shell: sh
+      run: |
+        source="ghcr.io/xrobot-org/${{ matrix.image_name }}:${{ steps.tags.outputs.source }}"
+        target="docker.io/xrimage/${{ matrix.monitor_name }}:${{ steps.tags.outputs.target }}"
+        docker tag "${source}" "${target}"
+        docker push "${target}"
+
+    - name: Update Docker Hub latest tag
+      if: github.ref_type == 'tag'
+      shell: sh
+      run: |
+        source="ghcr.io/xrobot-org/${{ matrix.image_name }}:${{ steps.tags.outputs.source }}"
+        latest="docker.io/xrimage/${{ matrix.monitor_name }}:latest"
+        docker tag "${source}" "${latest}"
+        docker push "${latest}"
