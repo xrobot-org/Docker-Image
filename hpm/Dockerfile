@@ -5,9 +5,10 @@ ARG HPM_TOOLCHAIN_VERSION="v0.1.0"
 ARG HPM_TOOLCHAIN_ARCHIVE_BASENAME="hpm-riscv32-unknown-elf-linux-x64"
 ARG HPM_TOOLCHAIN_URL=""
 ARG HPM_TOOLCHAIN_SHA256="6a14d30ac29da5a23185db249d5f7b1f9e20bb2deb8d26302ba2baff0442f108"
+ARG HPM_SDK_VERSION="v1.13.0"
 
 LABEL maintainer="2592509183@qq.com" \
-      description="Docker Image for XRobot HPM builds with the published mainline riscv32-unknown-elf GNU toolchain." \
+      description="Docker Image for XRobot HPM builds with the published mainline riscv32-unknown-elf GNU toolchain and the HPM SDK." \
       org.opencontainers.image.version="${HPM_TOOLCHAIN_VERSION}"
 
 RUN apt-get update && \
@@ -48,6 +49,7 @@ RUN ln -sf /usr/bin/python3 /usr/bin/python && \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3
 
 ENV XR_HPM_TOOLCHAIN_ROOT=/opt/hpm-riscv32-unknown-elf
+ENV GNURISCV_TOOLCHAIN_PATH=${XR_HPM_TOOLCHAIN_ROOT}
 ENV PATH=${XR_HPM_TOOLCHAIN_ROOT}/bin:${PATH}
 
 RUN set -eux; \
@@ -67,3 +69,12 @@ RUN set -eux; \
     riscv32-unknown-elf-gcc --version | head -n 1; \
     riscv32-unknown-elf-g++ --version | head -n 1; \
     riscv32-unknown-elf-gdb --version | head -n 1
+
+# HPM SDK: the BSPs find it through find_package(hpm-sdk HINTS $ENV{HPM_SDK_BASE}).
+ENV HPM_SDK_BASE=/opt/hpm_sdk/${HPM_SDK_VERSION}
+
+RUN set -eux; \
+    mkdir -p /opt/hpm_sdk; \
+    git clone --depth 1 --branch "${HPM_SDK_VERSION}" https://github.com/hpmicro/hpm_sdk "${HPM_SDK_BASE}"; \
+    rm -rf "${HPM_SDK_BASE}/.git"; \
+    test -f "${HPM_SDK_BASE}/cmake/hpm-sdk-config.cmake"
